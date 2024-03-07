@@ -32,14 +32,10 @@ fetch(url, {
             <p class="card-text">
         ${product.description}
         </p>
-        <div class="d-flex justify-content-between align-items-center">
             <a href="./details.html?productId=${product._id}" class="text-decoration-none">Dettagli</a>
-          </div>
         </div>
       </div>
     </div>`;
     });
   })
   .catch((error) => console.log(error));
-
-console.log(new URLSearchParams(window.location.search));
