@@ -36,7 +36,7 @@
       </div>
     </nav>
     <div class="container">
-      <form>
+      <form onsubmit="submitProduct(event)">
         <div class="mb-3">
           <label for="product-name">Nome prodotto:</label>
 
@@ -47,6 +47,7 @@
             aria-label="Productname"
             aria-describedby="basic-addon1"
             id="product-name"
+            required
           />
         </div>
         <div class="mb-3">
@@ -58,6 +59,7 @@
             aria-label="Description"
             aria-describedby="basic-addon1"
             id="description"
+            required
           />
         </div>
         <div class="mb-3">
@@ -69,6 +71,7 @@
             aria-label="Brand"
             aria-describedby="basic-addon1"
             id="brand"
+            required
           />
         </div>
         <div class="mb-3">
@@ -80,6 +83,7 @@
             aria-label="Url"
             aria-describedby="basic-addon1"
             id="url"
+            required
           />
         </div>
         <div class="mb-3">
@@ -91,9 +95,11 @@
             aria-label="Pricing"
             aria-describedby="basic-addon1"
             id="pricing"
+            required
           />
         </div>
-        <button type="submit" class="btn btn-primary">Aggiungi prodotto</button>
+        <button type="submit" class="btn"></button>
+        <button id="delete-button" class="btn btn-danger d-none" onclick="handleDelete()">Cancella prodotto</button>
       </form>
     </div>
     <script

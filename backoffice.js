@@ -1,5 +1,12 @@
+const productId = new URLSearchParams(window.location.search).get("productId");
+const URL = productId
+  ? "https://striveschool-api.herokuapp.com/api/product/" + productId
+  : "https://striveschool-api.herokuapp.com/api/product/";
+const method = productId ? "PUT" : "POST";
+console.log(productId);
 function submitProduct(e) {
   e.preventDefault();
+
   const url = "https://striveschool-api.herokuapp.com/api/product/";
   const productName = document.getElementById("product-name");
   const description = document.getElementById("description");
@@ -7,17 +14,17 @@ function submitProduct(e) {
   const imageUrl = document.getElementById("url");
   const pricing = document.getElementById("pricing");
 
-  const addProduct = {
+  const addOrEditProduct = {
     name: productName.value,
     description: description.value,
     brand: brand.value,
     imageUrl: imageUrl.value,
     price: pricing.value,
   };
-  console.log(addProduct);
+  console.log(addOrEditProduct);
   fetch(url, {
-    method: "POST",
-    body: JSON.stringify(addProduct),
+    method,
+    body: JSON.stringify(addOrEditProduct),
     headers: {
       Authorization:
         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxOWY3YTRjNTllYzAwMTk5MGQ3MDUiLCJpYXQiOjE3MDkyODUyNDIsImV4cCI6MTcxMDQ5NDg0Mn0.2ag0uAfsD3-iJSnTOlbshY9Ht5CIovZwjH9g98oa6Vg",
@@ -31,11 +38,74 @@ function submitProduct(e) {
         throw new Error("Errore nel ricevimento dei dati backoffice");
       }
     })
-    .then((addProduct) => {
-      alert("Il prodotto è stato creato correttamente", addProduct);
+    .then((addOrEditProduct) => {
+      if (productId) {
+        alert("Il prodotto con id:" + addOrEditProduct._id + "è stato modificato correttamente");
+      } else {
+        alert("Il prodotto con id:" + addOrEditProduct._id + "è stato creato correttamente");
+      }
+      e.target.reset();
     })
     .catch((error) => console.log(error));
 }
 
-const form = document.querySelector("form");
-form.addEventListener("submit", submitProduct);
+const handleDelete = () => {
+  const confirmed = confirm("Sei sicuro di voler eliminare?");
+
+  if (confirmed) {
+    fetch(URL, {
+      method: "DELETE",
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxOWY3YTRjNTllYzAwMTk5MGQ3MDUiLCJpYXQiOjE3MDkyODUyNDIsImV4cCI6MTcxMDQ5NDg0Mn0.2ag0uAfsD3-iJSnTOlbshY9Ht5CIovZwjH9g98oa6Vg",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((deletedProduct) => {
+        alert(deletedProduct.name + " è stato eliminato");
+
+        window.location.assign("./index.html");
+      });
+  }
+};
+
+window.onload = () => {
+  const submitBtn = document.querySelector("button[type='submit']");
+  const deleteBtn = document.getElementById("delete-button");
+
+  if (productId) {
+    submitBtn.innerText = "Modifica prodotto";
+    submitBtn.classList.add("btn-success");
+    deleteBtn.classList.remove("d-none");
+
+    fetch(URL, {
+      method: "GET",
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWUxOWY3YTRjNTllYzAwMTk5MGQ3MDUiLCJpYXQiOjE3MDkyODUyNDIsImV4cCI6MTcxMDQ5NDg0Mn0.2ag0uAfsD3-iJSnTOlbshY9Ht5CIovZwjH9g98oa6Vg",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Errore nel reperimento dei dati");
+        }
+      })
+      .then((product) => {
+        document.getElementById("product-name").value = product.name;
+        document.getElementById("description").value = product.description;
+        document.getElementById("brand").value = product.brand;
+        document.getElementById("url").value = product.imageUrl;
+        document.getElementById("pricing").value = product.price;
+
+        console.log(product);
+      })
+      .catch((error) => console.log(error));
+  } else {
+    submitBtn.innerText = "Aggiungi prodotto";
+    submitBtn.classList.add("btn-primary");
+  }
+};

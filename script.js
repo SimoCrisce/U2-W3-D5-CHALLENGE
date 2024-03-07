@@ -34,7 +34,6 @@ fetch(url, {
         </p>
         <div class="d-flex justify-content-between align-items-center">
             <a href="./details.html?productId=${product._id}" class="text-decoration-none">Dettagli</a>
-            <button type="button" class="btn btn-success">Modifica</button>
           </div>
         </div>
       </div>

@@ -28,8 +28,7 @@ window.onload = () => {
       const detailsContainer = document.getElementById("details-container");
       console.log(product);
       detailsContainer.innerHTML = `<div class="bg-body-secondary p-3 rounded border border-black"><div>
-    <img
-    width="500px"
+    <img width="500px"
     src="${product.imageUrl}"
     alt=""
     />
@@ -41,11 +40,12 @@ window.onload = () => {
     <div class="mx-3">
     <p>${product.brand}</p>
     <p>${product.description}</p>
-    </div></div>`;
+    </div><button class="btn btn-success mt-3" onclick="editBtn()">Modifica prodotto</button></div>
+    `;
     })
     .catch((error) => console.log(error));
 };
 
-const handleBtnClick = () => {
-  window.location.assign("./backoffice.html?agendaId=" + productId);
+const editBtn = () => {
+  window.location.assign("./backoffice.html?productId=" + productId);
 };
